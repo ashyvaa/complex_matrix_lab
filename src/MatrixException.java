@@ -1,4 +1,5 @@
-package PACKAGE_NAME;
-
-public class MatrixException {
+public class MatrixException extends Exception {
+    public MatrixException(String message) {
+        super(message);
+    }
 }
