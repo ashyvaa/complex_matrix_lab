@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class Main {
 
     private static Scanner scanner = new Scanner(System.in);
+    private static ComplexMatrix lastResult = null;
 
     public static void main(String[] args) {
         System.out.println("Операции над матрицами комплексных чисел");
@@ -57,7 +58,7 @@ public class Main {
     }
 
     private static ComplexMatrix readMatrix(String name) {
-
+        System.out.println("Ввод матрицы " + name);
 
         System.out.print("Число строк: ");
         int rows = Integer.parseInt(scanner.nextLine().trim());
@@ -66,7 +67,7 @@ public class Main {
 
         ComplexMatrix matrix = new ComplexMatrix(rows, cols);
 
-        System.out.println("Вводите элементы в формате: действительная часть мнимая часть");
+        System.out.println("Вводите элементы в формате: действительная_часть мнимая_часть");
         System.out.println("Например: 3 -2  означает число 3-2i");
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -80,39 +81,56 @@ public class Main {
         return matrix;
     }
 
+    private static ComplexMatrix chooseMatrix(String name) {
+        if (lastResult != null) {
+            System.out.print("Использовать последний результат как " + name + " матрицу? (y/n): ");
+            String answer = scanner.nextLine().trim();
+            if (answer.equalsIgnoreCase("y")) {
+                System.out.println("Используется сохранённый результат:");
+                System.out.print(lastResult);
+                return lastResult;
+            }
+        }
+        return readMatrix(name);
+    }
+
     private static void doAdd() throws MatrixException {
-        ComplexMatrix a = readMatrix("A");
-        ComplexMatrix b = readMatrix("B");
+        ComplexMatrix a = chooseMatrix("первая");
+        ComplexMatrix b = chooseMatrix("вторая");
         ComplexMatrix result = a.add(b);
         System.out.println("Результат A + B:");
         System.out.print(result);
+        lastResult = result;
     }
 
     private static void doMultiply() throws MatrixException {
-        ComplexMatrix a = readMatrix("A");
-        ComplexMatrix b = readMatrix("B");
+        ComplexMatrix a = chooseMatrix("первая");
+        ComplexMatrix b = chooseMatrix("вторая");
         ComplexMatrix result = a.multiply(b);
         System.out.println("Результат A * B:");
         System.out.print(result);
+        lastResult = result;
     }
 
     private static void doDivide() throws MatrixException {
-        ComplexMatrix a = readMatrix("A");
-        ComplexMatrix b = readMatrix("B");
+        ComplexMatrix a = chooseMatrix("первая");
+        ComplexMatrix b = chooseMatrix("вторая");
         ComplexMatrix result = a.divide(b);
         System.out.println("Результат A / B:");
         System.out.print(result);
+        lastResult = result;
     }
 
     private static void doTranspose() {
-        ComplexMatrix a = readMatrix("A");
+        ComplexMatrix a = chooseMatrix("исходная");
         ComplexMatrix result = a.transpose();
         System.out.println("Транспонированная матрица:");
         System.out.print(result);
+        lastResult = result;
     }
 
     private static void doDeterminant() throws MatrixException {
-        ComplexMatrix a = readMatrix("A");
+        ComplexMatrix a = chooseMatrix("исходная");
         ComplexNumber det = a.determinant();
         System.out.println("Определитель = " + det);
     }
